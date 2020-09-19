@@ -25,7 +25,7 @@ SECRET_KEY = '*w(lfxzp-uqz8cn8#*o&+6hd1xma!f-m^liwyyqmqr)v9^we$7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0"]
 
 
 # Application definition
@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+SECURE_CONTENT_TYPE_NOSNIFF: False
 
 ROOT_URLCONF = 'smvsite.urls'
 
