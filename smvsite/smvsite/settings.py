@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from . import get_config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '*w(lfxzp-uqz8cn8#*o&+6hd1xma!f-m^liwyyqmqr)v9^we$7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = get_config.get_env_config("DEBUG", False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "smvbismarck.herokuapp.com"]
 
 
 # Application definition
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+SECURE_CONTENT_TYPE_NOSNIFF: False
 
 ROOT_URLCONF = 'smvsite.urls'
 
@@ -75,8 +77,8 @@ WSGI_APPLICATION = 'smvsite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': get_config.get_env_config("DB_ENGINE", "django.db.backends.sqlite3"),
+        'NAME': get_config.get_env_config("DB_NAME", "db.sqlite3"),
     }
 }
 
