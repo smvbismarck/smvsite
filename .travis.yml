@@ -26,5 +26,6 @@ before_script:
   - cd smvsite
   - psql -c 'create database travis_ci_test;' -U postgres
 script:
+  - flake8
   - python manage.py migrate
   - python manage.py test

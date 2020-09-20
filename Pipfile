@@ -10,6 +10,7 @@ django = "*"
 gunicorn = "*"
 psycopg2 = "*"
 django-heroku = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.8"
