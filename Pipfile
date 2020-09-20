@@ -11,6 +11,7 @@ gunicorn = "*"
 psycopg2 = "*"
 django-heroku = "*"
 flake8 = "*"
+python-coveralls = "*"
 
 [requires]
 python_version = "3.8"
