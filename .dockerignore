@@ -1,0 +1,12 @@
+.gitignore
+.dockerignore
+.github
+architechture.drawio
+.idea
+Dockerfile
+LICENSE
+Pipfile
+Pipfile.lock
+Procfile
+README.md
+smvsite/db.sqlite3
