@@ -22,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*w(lfxzp-uqz8cn8#*o&+6hd1xma!f-m^liwyyqmqr)v9^we$7'
+SECRET_KEY = get_config.get_env_config("SECRET_KEY", '*w(lfxzp-uqz8cn8#*o&+6hd1xma!f-m^liwyyqmqr)v9^we$7')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = get_config.get_env_config("DEBUG", False)
+DEBUG = bool(get_config.get_env_config("DEBUG", False))
 
 ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "smvbismarck.herokuapp.com"]
 
@@ -82,6 +82,10 @@ DATABASES = {
     'default': {
         'ENGINE': get_config.get_env_config("DB_ENGINE", "django.db.backends.sqlite3"),
         'NAME': get_config.get_env_config("DB_NAME", "db.sqlite3"),
+        'USER': get_config.get_env_config("DB_USER", ""),
+        'PASSWORD': get_config.get_env_config("DB_PASSWORD", ""),
+        'HOST': get_config.get_env_config("DB_HOST", ""),
+        'PORT': get_config.get_env_config("DB_PORT", "")
     }
 }
 

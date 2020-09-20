@@ -15,9 +15,22 @@ python:
   - "3.5-dev"
   - "3.4"
   - "3.4-dev"
+services:
+  - postgresql
 install:
   - pip install -r requirements.txt
-before_script: cd smvsite
+env:
+  global:
+    - DEBUG=True
+    - DB_ENGINE=django.db.backends.postgresql_psycopg2
+    - DB_NAME=travis_ci_test
+    - DB_USER=postgres
+    - DB_PASSWORD=postgres
+    - DB_HOST=localhost
+    - DB_PORT=5432
+before_script:
+  - cd smvsite
+  - psql -c 'create database travis_ci_test;' -U postgres
 script:
   - python manage.py migrate
   - python manage.py test
