@@ -13,6 +13,7 @@ services:
   - postgresql
 install:
   - pip install -r requirements.txt
+  - pip install coveralls
 env:
   global:
     - DEBUG=True
@@ -28,4 +29,7 @@ before_script:
 script:
   - flake8
   - python manage.py migrate
-  - python manage.py test
+  - coverage run --source=blog, landing manage.py test
+
+after_success:
+  coveralls
