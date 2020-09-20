@@ -1,3 +1,4 @@
+import django_heroku
 """
 Django settings for smvsite project.
 
@@ -121,3 +122,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = "static"
+django_heroku.settings(locals())
