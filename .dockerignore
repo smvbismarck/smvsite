@@ -9,4 +9,4 @@ Pipfile
 Pipfile.lock
 Procfile
 README.md
-smvsite/db.sqlite3
+db.sqlite3
