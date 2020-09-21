@@ -21,7 +21,7 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
-        response = self.client.get("/article/test")
+        response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
 
     def test_article_route_normal_behavior_body(self):
@@ -29,7 +29,7 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
-        response = self.client.get("/article/test")
+        response = self.client.get("/article/1")
         self.assertEqual(response.content, b"lorem ipsum")
 
     def test_article_route_id_as_name(self):
@@ -61,7 +61,7 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="test", description="test", body="")
         test_article.save()
-        response = self.client.get("/article/test")
+        response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
 
     def test_article_empty_body(self):
@@ -69,7 +69,7 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="test", description="test", body="")
         test_article.save()
-        response = self.client.get("/article/test")
+        response = self.client.get("/article/1")
         self.assertEqual(response.content, b"")
 
     def test_article_without_text(self):
@@ -77,7 +77,7 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="test", description="test")
         test_article.save()
-        response = self.client.get("/article/test")
+        response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
 
     def test_article_without_text_body(self):
@@ -85,7 +85,7 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="test", description="test")
         test_article.save()
-        response = self.client.get("/article/test")
+        response = self.client.get("/article/1")
         self.assertEqual(response.content, b"")
 
     def test_description_empty(self):
@@ -93,7 +93,7 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="test", description="", body="lorem ipsum")
         test_article.save()
-        response = self.client.get("/article/test")
+        response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
 
     def test_description_empty_body(self):
@@ -101,23 +101,7 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="test", description="", body="lorem ipsum")
         test_article.save()
-        response = self.client.get("/article/test")
-        self.assertEqual(response.content, b"lorem ipsum")
-
-    def test_special_char_name(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
-        superuser.save()
-        test_article = Article(author=superuser, title="§&%&())", description="test", body="lorem ipsum")
-        test_article.save()
-        response = self.client.get("/article/§&%&())")
-        self.assertEqual(response.status_code, 200)
-
-    def test_special_char_name_body(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
-        superuser.save()
-        test_article = Article(author=superuser, title="§&%&())", description="test", body="lorem ipsum")
-        test_article.save()
-        response = self.client.get("/article/§&%&())")
+        response = self.client.get("/article/1")
         self.assertEqual(response.content, b"lorem ipsum")
 
     def test_xss_protection(self):
@@ -125,7 +109,7 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="xss", description="test", body="<script>alert(1)</script>")
         test_article.save()
-        response = self.client.get("/article/xss")
+        response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
 
     def test_xss_protection_body(self):
@@ -133,5 +117,5 @@ class route_tests(TestCase):
         superuser.save()
         test_article = Article(author=superuser, title="xss", description="test", body="<script>alert(1)</script>")
         test_article.save()
-        response = self.client.get("/article/xss")
+        response = self.client.get("/article/1")
         self.assertEqual(response.content, b"&lt;script&gt;alert(1)&lt;/script&gt;")
