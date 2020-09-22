@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blogpost</title>
+</head>
+<body>
+<a href={% url "index" %}><header>SMV-Website</header></a>
+<a href={% url "article" article.id%}><h1>{{ article.title }}</h1></a>
+<p>{{ article.body }}</p>
+</body>
+</html>

@@ -1,9 +1,9 @@
 from django.http import HttpResponse
 import html
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from .models import Article
 
 
 def blogEntry(request, article_id):
     blog_article = get_object_or_404(Article, id=article_id)
-    return HttpResponse(html.escape(blog_article.body))
+    return render(request, "detail.html", {"article": blog_article})

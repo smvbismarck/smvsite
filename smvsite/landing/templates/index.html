@@ -5,14 +5,14 @@
     <title>Title</title>
 </head>
 <body>
-<header>SMV-Website</header>
+<a href={% url "index" %}><header>SMV-Website</header></a>
 <div>
     <h1>View the latest blog posts:</h1>
     <ul>
         {% for i in articles %}
             <li>
                 <div>
-                    <a href={% url "article" i.id %}>{{ i.title }}</a>
+                    <a href={% url "article" i.id %}><h2>{{ i.title }}</h2></a>
                     <p>{{ i.description }}</p>
                 </div>
             </li>
