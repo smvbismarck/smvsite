@@ -7,8 +7,9 @@ class PageTests(TestCase):
         response = self.client.get("/")
         self.assertEquals(response.status_code, 200)
 
-    def test_root_content(self):
-        response = self.client.get("/")
-        self.assertEquals(response.content, b"Hello World")
 
-# Create your tests here.
+# noinspection DuplicatedCode
+class TestEmpty(TestCase):
+    def test_empty_is_template_used(self):
+        response = self.client.get("/")
+        self.assertTemplateUsed(response, "index.html")

@@ -101,15 +101,6 @@ class TestNormal(TestCase):
         response = self.client.get("/article/1")
         self.assertIn(b"lorem ipsum", response.content)
 
-    def test_normal_behaviour_wanted_response(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
-        superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
-        test_article.save()
-        response = self.client.get("/article/1")
-        self.assertEqual(response.content,
-                         b"<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Blogpost</title>\n</head>\n<body>\n<a href=/><header>SMV-Website</header></a>\n<a href=/article/1><h1>test</h1></a>\n<p>lorem ipsum</p>\n</body>\n</html>")  # noqa: E501
-
 
 # noinspection DuplicatedCode
 class TestRandomBehaviour(TestCase):
@@ -199,18 +190,6 @@ class TestRandomBehaviour(TestCase):
         response = self.client.get("/article/1")
         self.assertIn(str.encode(body), response.content)
 
-    def test_normal_behaviour_wanted_response(self):
-        title = getRandomString(5)
-        body = getRandomString(10)
-        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
-        superuser.save()
-        test_article = Article(author=superuser, title=title, description=getRandomString(5),
-                               body=body)
-        test_article.save()
-        response = self.client.get("/article/1")
-        self.assertEqual(response.content,
-                         b"<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Blogpost</title>\n</head>\n<body>\n<a href=/><header>SMV-Website</header></a>\n<a href=/article/1><h1>" + str.encode(title) + b"</h1></a>\n<p>" + str.encode(body) + b"</p>\n</body>\n</html>")  # noqa: E501
-
 
 # noinspection DuplicatedCode
 class TestXssProtection(TestCase):
@@ -290,17 +269,8 @@ class TestXssProtection(TestCase):
         response = self.client.get("/article/1")
         self.assertIn(b"&lt;script&gt;alert(1)&lt;/script&gt;", response.content)
 
-    def test_xss_protection_wanted_response(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
-        superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription",
-                               body="<script>alert(1)</script>")
-        test_article.save()
-        response = self.client.get("/article/1")
-        self.assertEqual(response.content,
-                         b"<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Blogpost</title>\n</head>\n<body>\n<a href=/><header>SMV-Website</header></a>\n<a href=/article/1><h1>test</h1></a>\n<p>&lt;script&gt;alert(1)&lt;/script&gt;</p>\n</body>\n</html>")  # noqa: E501
 
-
+# noinspection DuplicatedCode
 class TestArticleModel(TestCase):
     def test_string_function(self):
         test_article = Article(title="stringtest")
