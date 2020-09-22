@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 import secrets
 import string
-from .models import Article
+from blog.models import Article
 from datetime import datetime
 
 char_string = string.ascii_letters + string.digits
