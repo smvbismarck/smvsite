@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header>SMV-Website</header>
+<div>
+    <h1>View the latest blog posts:</h1>
+    <ul>
+        {% for i in articles %}
+            <li>
+                <div>
+                    <a href={% url "article" i.id %}>{{ i.title }}</a>
+                    <p>{{ i.description }}</p>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
