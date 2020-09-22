@@ -1,5 +1,3 @@
-from django.http import HttpResponse
-import html
 from django.shortcuts import get_object_or_404, render
 from .models import Article
 
