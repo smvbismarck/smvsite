@@ -1,4 +1,7 @@
-import django_heroku
+import os
+if '/app' in os.environ['HOME']:
+    import django_heroku
+    django_heroku.settings(locals())
 """
 Django settings for smvsite project.
 
@@ -129,4 +132,3 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = "static"
-django_heroku.settings(locals())
