@@ -28,7 +28,5 @@ before_script:
 script:
   - flake8
   - python manage.py migrate
-  - coverage run --source=blog,landing,smvsite manage.py test
-
-after_success:
-  coveralls
+  - python manage.py collectstatic
+  - python manage.py test
