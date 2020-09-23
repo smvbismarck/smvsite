@@ -1,0 +1,1 @@
+python manage.py collectstatic --noinput && python manage.py migrate && gunicorn --reload -b 0.0.0.0:8000 smvsite.wsgi
