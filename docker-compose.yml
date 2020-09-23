@@ -1,0 +1,21 @@
+version: '3.0'
+services:
+  django:
+    build: .
+    ports:
+    - "8000:8000"
+    volumes:
+    - .:/code
+    - static/admin
+    depends_on:
+      - database
+    links:
+      - "database"
+    env_file:
+      - .env/django.env
+    entrypoint: ["sh", "docker-entrypoint.sh"]
+
+  database:
+    image: postgres:alpine
+    env_file:
+      - .env/postgres.env

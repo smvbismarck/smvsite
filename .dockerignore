@@ -10,3 +10,5 @@ Pipfile.lock
 Procfile
 README.md
 db.sqlite3
+.travis.yml
+.flake8
