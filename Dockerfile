@@ -1,5 +1,4 @@
-FROM python:alge’s settings blocked the loading of a resource at inline (“script-src”). 3 sandbox eval code:17:35
-Content Security Policy: The page’s spine
+FROM python:alpine
 
 ENV PYTHONUNBUFFERED 1
 
