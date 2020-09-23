@@ -1,9 +1,19 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+import secrets
+import string
 from .models import Article
+from datetime import datetime
+
+char_string = string.ascii_letters + string.digits
 
 
-class route_tests(TestCase):
+def getRandomString(size):
+    return ''.join(secrets.choice(char_string) for _ in range(size))
+
+
+# noinspection DuplicatedCode
+class Test404(TestCase):
     def test_article_route_without_article(self):
         response = self.client.get("/article")
         self.assertEqual(response.status_code, 404)
@@ -16,7 +26,10 @@ class route_tests(TestCase):
         response = self.client.get("/article/5")
         self.assertEqual(response.status_code, 404)
 
-    def test_article_route_normal_behavior(self):
+
+# noinspection DuplicatedCode
+class TestNormal(TestCase):
+    def test_normal_behaviour(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
         test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
@@ -24,98 +37,285 @@ class route_tests(TestCase):
         response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
 
-    def test_article_route_normal_behavior_body(self):
+    def test_normal_behaviour_is_template_used(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
         test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.content, b"lorem ipsum")
+        self.assertTemplateUsed(response, "detail.html")
 
-    def test_article_route_id_as_name(self):
+    def test_normal_behaviour_context(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="1", description="test", body="lorem ipsum")
+        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"], test_article)
+
+    def test_normal_behaviour_context_author(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"].author, superuser)
+
+    def test_normal_behaviour_context_title(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"].title, "test")
+
+    def test_normal_behaviour_context_description(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"].description, "testdescription")
+
+    def test_normal_behaviour_context_body(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"].body, "lorem ipsum")
+
+    def test_normal_behaviour_contains_title(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertIn(b"test", response.content)
+
+    def test_normal_behaviour_contains_body(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertIn(b"lorem ipsum", response.content)
+
+
+# noinspection DuplicatedCode
+class TestRandomBehaviour(TestCase):
+    def test_random_behaviour(self):
+        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+                               body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
 
-    def test_article_route_id_as_name_body(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
+    def test_normal_behaviour_is_template_used(self):
+        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="1", description="test", body="lorem ipsum")
+        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+                               body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.content, b"lorem ipsum")
+        self.assertTemplateUsed(response, "detail.html")
 
-    def test_article_empty_name(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
+    def test_normal_behaviour_context(self):
+        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="", description="test", body="lorem ipsum")
-        test_article.save()
-        response = self.client.get("/article/")
-        self.assertEqual(response.status_code, 404)
-
-    def test_article_empty(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
-        superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="")
+        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+                               body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["article"], test_article)
 
-    def test_article_empty_body(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
+    def test_normal_behaviour_context_author(self):
+        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="")
+        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+                               body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.content, b"")
+        self.assertEqual(response.context["article"].author, superuser)
 
-    def test_article_without_text(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
+    def test_normal_behaviour_context_title(self):
+        title = getRandomString(5)
+        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test")
+        test_article = Article(author=superuser, title=title, description=getRandomString(5),
+                               body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["article"].title, title)
 
-    def test_article_without_text_body(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
+    def test_normal_behaviour_context_description(self):
+        description = getRandomString(5)
+        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test")
+        test_article = Article(author=superuser, title=getRandomString(5), description=description,
+                               body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.content, b"")
+        self.assertEqual(response.context["article"].description, description)
 
-    def test_description_empty(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
+    def test_normal_behaviour_context_body(self):
+        body = getRandomString(10)
+        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="", body="lorem ipsum")
+        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+                               body=body)
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["article"].body, body)
 
-    def test_description_empty_body(self):
-        superuser = User(username="admin", password="admin", is_superuser=True)
+    def test_normal_behaviour_contains_title(self):
+        title = getRandomString(5)
+        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="", body="lorem ipsum")
+        test_article = Article(author=superuser, title=title, description=getRandomString(5),
+                               body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.content, b"lorem ipsum")
+        self.assertIn(str.encode(title), response.content)
 
+    def test_normal_behaviour_contains_body(self):
+        body = getRandomString(10)
+        superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+                               body=body)
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertIn(str.encode(body), response.content)
+
+
+# noinspection DuplicatedCode
+class TestXssProtection(TestCase):
     def test_xss_protection(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="xss", description="test", body="<script>alert(1)</script>")
+        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
 
-    def test_xss_protection_body(self):
+    def test_xss_protection_is_template_used(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="xss", description="test", body="<script>alert(1)</script>")
+        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.content, b"&lt;script&gt;alert(1)&lt;/script&gt;")
+        self.assertTemplateUsed(response, "detail.html")
+
+    def test_xss_protection_context(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"], test_article)
+
+    def test_xss_protection_context_author(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"].author, superuser)
+
+    def test_xss_protection_context_title(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"].title, "test")
+
+    def test_xss_protection_context_description(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="testdescription",
+                               body="<script>alert(1)</script>")  # noqa: E501
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"].description, "testdescription")
+
+    def test_xss_protection_context_body(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="testdescription",
+                               body="<script>alert(1)</script>")  # noqa: E501
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertEqual(response.context["article"].body, "<script>alert(1)</script>")
+
+    def test_xss_protection_contains_title(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="testdescription",
+                               body="<script>alert(1)</script>")  # noqa: E501
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertIn(b"test", response.content)
+
+    def test_xss_protection_contains_body(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="testdescription",
+                               body="<script>alert(1)</script>")  # noqa: E501
+        test_article.save()
+        response = self.client.get("/article/1")
+        self.assertIn(b"&lt;script&gt;alert(1)&lt;/script&gt;", response.content)
+
+
+# noinspection DuplicatedCode
+class TestArticleModel(TestCase):
+    def test_string_function(self):
+        test_article = Article(title="stringtest")
+        self.assertEqual(str(test_article), test_article.title)
+
+    def test_id_type(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article.save()
+        test_article = Article.objects.get(id=1)
+        self.assertIsInstance(test_article.id, int)
+
+    def test_author_type(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article.save()
+        self.assertIsInstance(test_article.author, User)
+
+    def test_title_type(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article.save()
+        self.assertIsInstance(test_article.title, str)
+
+    def test_description_type(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article.save()
+        self.assertIsInstance(test_article.description, str)
+
+    def test_body_type(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article.save()
+        self.assertIsInstance(test_article.body, str)
+
+    def test_time_type(self):
+        superuser = User(username="admin", password="admin", is_superuser=True)
+        superuser.save()
+        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article.save()
+        test_article = Article.objects.get(id=1)
+        self.assertIsInstance(test_article.time, datetime)
