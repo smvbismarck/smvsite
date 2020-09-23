@@ -2,7 +2,6 @@ from django.test import TestCase
 from .models import Komitee
 
 
-# TODO Rename the funcs
 class route_tests(TestCase):
     def test_article_route_without_article(self):
         response = self.client.get("/komitee")
