@@ -18,4 +18,8 @@ RUN apk --purge del .build-deps
 
 COPY . /code
 
-CMD python smvsite/manage.py migrate && gunicorn -b 0.0.0.0:8000 --pythonpath smvsite smvsite.wsgi
+WORKDIR /code/smvsite
+
+RUN python manage.py collectstatic --noinput
+
+CMD python manage.py migrate && gunicorn -b 0.0.0.0:8000 smvsite.wsgi
