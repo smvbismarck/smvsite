@@ -22,4 +22,4 @@ WORKDIR /code/smvsite
 
 RUN python manage.py collectstatic --noinput
 
-CMD python manage.py migrate && gunicorn -b 0.0.0.0:8000 smvsite.wsgi
+CMD python manage.py gunicorn -b 0.0.0.0:8000 smvsite.wsgi
