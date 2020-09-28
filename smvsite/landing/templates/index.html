@@ -18,16 +18,23 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="index.html">Home</a>
+            <a class="nav-link" href={% url "index" %}>Home</a>
+          </li>
+           <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle linkitem" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Komitees</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for i in komitees %}
+                            <a class="dropdown-item linkitem" href={% url "komitee" i.title %}>{{ i.title }}</a>
+                            {% endfor %}
+                    </li>
+            <li class="nav-item">
+            <a class="nav-link" href={% url "about" %}>Über uns</a>
+          </li>
+            <li class="nav-item">
+            <a class="nav-link" href={% url "dsgvo" %}>DSGVO</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="about.html">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="post.html">Sample Post</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="contact.html">Contact</a>
+            <a class="nav-link" href={% url "impressum" %}>Impressum</a>
           </li>
         </ul>
       </div>
