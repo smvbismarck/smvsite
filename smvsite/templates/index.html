@@ -14,6 +14,7 @@
         <div class="container">
             <div class="row">
             {% for i in articles %}
+                {% if i.is_post %}
                 <div class="col-md-6 col-sm-12 col-lg-4 col-xl-3 post">
                         <div class="container post">
                             <div class="post-details">
@@ -22,6 +23,7 @@
                             </div>
                         </div>
                 </div>
+                {% endif %}
             {% endfor %}
             </div>
         </div>

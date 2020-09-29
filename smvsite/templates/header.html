@@ -14,8 +14,10 @@
            <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle linkitem" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Komitees</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {% for i in komitees %}
-                            <a class="dropdown-item linkitem" href={% url "komitee" i.title %}>{{ i.title }}</a>
+                            {% for i in articles %}
+                                {% if not i.is_post %}
+                                    <a class="dropdown-item linkitem" href={% url "komitee" i.title %}>{{ i.title }}</a>
+                                {% endif %}
                             {% endfor %}
                     </li>
             <li class="nav-item">
