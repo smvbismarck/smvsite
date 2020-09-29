@@ -1,9 +1,8 @@
-from django.http import HttpResponse
-import html
-from django.shortcuts import get_object_or_404
-from .models import Komitee
+from django.shortcuts import get_object_or_404, render
+from blog import models as blog_models
 
 
 def blogEntry(request, article_name):
-    komitee_article = get_object_or_404(Komitee, title=article_name)
-    return HttpResponse(html.escape(komitee_article.body))
+    komitee_article = get_object_or_404(blog_models.Article, title=article_name, is_post=False)
+    articles = blog_models.Article.objects.all()
+    return render(request, "detail.html", {"article": komitee_article, "articles": articles})

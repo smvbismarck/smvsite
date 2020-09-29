@@ -1,13 +1,4 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href={% static "bootstrap/bootstrap_4.5.2.css" %}>
-    <link rel="stylesheet" href={% static "index/css/style.css" %}>
-</head>
-<body>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
       <a class="navbar-brand" href={% url "index" %}>SMV-Bismarck</a>
@@ -23,8 +14,10 @@
            <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle linkitem" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Komitees</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {% for i in komitees %}
-                            <a class="dropdown-item linkitem" href={% url "komitee" i.title %}>{{ i.title }}</a>
+                            {% for i in articles %}
+                                {% if not i.is_post %}
+                                    <a class="dropdown-item linkitem" href={% url "komitee" i.title %}>{{ i.title }}</a>
+                                {% endif %}
                             {% endfor %}
                     </li>
             <li class="nav-item">
@@ -40,7 +33,6 @@
       </div>
     </div>
   </nav>
-
 <header class="masthead" style="background-image: url({% static "index/img/cropped-SMV-Theme.jpg" %})">
     <div class="overlay"></div>
     <div class="container">
@@ -54,26 +46,3 @@
       </div>
     </div>
   </header>
-<div class="container-fluid">
-    <div>
-        <div class="container">
-            <div class="row">
-            {% for i in articles %}
-                <div class="col-md-6 col-sm-12 col-lg-4 col-xl-3 post">
-                        <div class="container post">
-                            <div class="post-details">
-                                <a href={% url "article" i.id %}><h3 class="h4">{{ i.title }}</h3></a>
-                                <p class="text-muted">{{ i.description }}</p>
-                            </div>
-                        </div>
-                </div>
-            {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
-<script src={% static "jquery-3.5.1.slim/query-3.5.1.slim.js" %}></script>
-<script src={% static "popper.js/popper.js" %}></script>
-<script src={% static "bootstrap/bootstrap_4.5.2.js" %}></script>
-</body>
-</html>

@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href={% static "bootstrap/bootstrap_4.5.2.css" %}>
+    <link rel="stylesheet" href={% static "index/css/style.css" %}>
+</head>
+<body>
+{% include "header.html" %}
+<div class="container">
+    <h1>{{ article.title }}</h1>
+    <p>{{ article.body }}</p>
+</div>
+</body>
+</html>
