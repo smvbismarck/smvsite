@@ -12,6 +12,7 @@ psycopg2 = "*"
 django-heroku = "*"
 flake8 = "*"
 python-coveralls = "*"
+mistune = "*"
 
 [requires]
 python_version = "3.8"

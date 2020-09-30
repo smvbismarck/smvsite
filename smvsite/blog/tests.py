@@ -83,7 +83,7 @@ class TestNormal(TestCase):
         test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.context["article"].body, "lorem ipsum")
+        self.assertEqual(response.context["article"].body, "<p>lorem ipsum</p>\n")
 
     def test_normal_behaviour_context_is_post(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
@@ -176,7 +176,7 @@ class TestRandomBehaviour(TestCase):
                                body=body)
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.context["article"].body, body)
+        self.assertEqual(response.context["article"].body, "<p>" + body + "</p>\n")
 
     def test_normal_behaviour_context_is_post(self):
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
@@ -266,7 +266,7 @@ class TestXssProtection(TestCase):
                                body="<script>alert(1)</script>")  # noqa: E501
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertEqual(response.context["article"].body, "<script>alert(1)</script>")
+        self.assertEqual(response.context["article"].body, "&lt;script&gt;alert(1)&lt;/script&gt;")
 
     def test_xss_protection_context_is_post(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
