@@ -55,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 SECURE_CONTENT_TYPE_NOSNIFF: False
 
@@ -137,7 +139,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": get_config.get_env_config("CACHE_URL", ""),
+        "LOCATION": get_config.get_env_config("CACHE_URL"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         },
