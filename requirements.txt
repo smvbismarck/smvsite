@@ -5,6 +5,7 @@ coverage==5.3
 dj-database-url==0.5.0
 Django==3.1.1
 django-heroku==0.3.1
+django-redis==4.12.1
 flake8==3.8.3
 gunicorn==20.0.4
 idna==2.10
@@ -16,6 +17,7 @@ pyflakes==2.2.0
 python-coveralls==2.9.3
 pytz==2020.1
 PyYAML==5.3.1
+redis==3.5.3
 requests==2.24.0
 six==1.15.0
 sqlparse==0.3.1
