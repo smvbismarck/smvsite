@@ -7,6 +7,7 @@ class Article(models.Model):
     title = models.CharField(max_length=100, unique=True)
     time = models.DateTimeField(auto_now_add=True)
     description = models.CharField(max_length=200)
+    cover = models.ImageField()
     body = models.TextField()
     is_post = models.BooleanField(default=True)
 

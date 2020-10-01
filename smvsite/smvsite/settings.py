@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'landing',
-    'komitee'
+    'komitee',
+    'couchdb_storage'
 ]
 
 MIDDLEWARE = [
@@ -158,3 +159,7 @@ CACHE_TTL = get_config.get_env_config("CACHE_TTL", 10)
 
 if '/app' in os.environ['HOME']:
     django_heroku.settings(locals())
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -19,6 +19,7 @@
                         <div class="container post">
                             <div class="post-details">
                                 <a href={% url "article" i.id %}><h3 class="h4">{{ i.title }}</h3></a>
+                                <img src={{ i.cover.url }} class="img">
                                 <p class="text-muted">{{ i.description }}</p>
                             </div>
                         </div>

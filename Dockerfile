@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apk update --no-cache && apk upgrade --no-cache
 
-RUN apk add --no-cache postgresql-libs
+RUN apk add --no-cache postgresql-libs zlib-dev jpeg-dev
 
 RUN apk add --no-cache --virtual .build-deps postgresql-dev gcc musl-dev
 
