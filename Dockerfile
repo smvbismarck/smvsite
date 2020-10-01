@@ -2,6 +2,8 @@ FROM python:alpine
 
 ENV PYTHONUNBUFFERED 1
 
+ENV CACHE_BACKEND django_redis.cache.RedisCache
+
 RUN apk update --no-cache && apk upgrade --no-cache
 
 RUN apk add --no-cache postgresql-libs

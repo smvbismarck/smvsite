@@ -13,6 +13,7 @@ django-heroku = "*"
 flake8 = "*"
 python-coveralls = "*"
 mistune = "*"
+django-redis = "*"
 
 [requires]
 python_version = "3.8"
