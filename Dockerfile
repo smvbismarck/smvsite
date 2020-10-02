@@ -18,6 +18,8 @@ RUN apk --purge del .build-deps
 
 COPY . /code
 
+RUN mkdir /code/smvsite/media
+
 WORKDIR /code/smvsite
 
 RUN python manage.py collectstatic --noinput
