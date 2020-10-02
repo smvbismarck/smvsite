@@ -12,3 +12,6 @@ jobs:
       - uses: actions/checkout@v1 # may be actions/checkout@v2 now
       - name: Build the latest Docker image
         run: docker build . --file Dockerfile --tag smvsite/smvsite:latest
+      - uses: actions/checkout@v1 # may be actions/checkout@v2 now
+      - name: Build the latest Docker image for static files
+        run: docker build . --file Dockerfile.static --tag smvsite/static:latest
