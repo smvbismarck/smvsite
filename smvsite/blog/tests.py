@@ -1,11 +1,17 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.contrib.auth.models import User
 import secrets
 import string
 from .models import Article
 from datetime import datetime
+import os
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+lorem_img_location = str(BASE_DIR) + "/static/lorem.jpg"
 
 char_string = string.ascii_letters + string.digits
+file_mock = SimpleUploadedFile(name='lorem.jpg', content=open(lorem_img_location, 'rb').read(), content_type='image/jpeg')
 
 
 def getRandomString(size):
@@ -32,7 +38,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
@@ -40,7 +46,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour_is_template_used(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertTemplateUsed(response, "detail.html")
@@ -48,7 +54,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"], test_article)
@@ -56,7 +62,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_author(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"].author, superuser)
@@ -64,7 +70,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"].title, "test")
@@ -72,7 +78,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_description(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"].description, "testdescription")
@@ -80,7 +86,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_body(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"].body, "<p>lorem ipsum</p>\n")
@@ -88,7 +94,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_is_post(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertTrue(response.context["article"].is_post)
@@ -96,7 +102,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour_contains_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertIn(b"test", response.content)
@@ -104,7 +110,7 @@ class TestNormal(TestCase):
     def test_normal_behaviour_contains_body(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertIn(b"lorem ipsum", response.content)
@@ -115,7 +121,7 @@ class TestRandomBehaviour(TestCase):
     def test_random_behaviour(self):
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5),
                                body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
@@ -124,7 +130,7 @@ class TestRandomBehaviour(TestCase):
     def test_normal_behaviour_is_template_used(self):
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5),
                                body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
@@ -133,7 +139,7 @@ class TestRandomBehaviour(TestCase):
     def test_normal_behaviour_context(self):
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5),
                                body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
@@ -142,7 +148,7 @@ class TestRandomBehaviour(TestCase):
     def test_normal_behaviour_context_author(self):
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5),
                                body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
@@ -152,7 +158,7 @@ class TestRandomBehaviour(TestCase):
         title = getRandomString(5)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=title, description=getRandomString(5),
+        test_article = Article(cover=file_mock, author=superuser, title=title, description=getRandomString(5),
                                body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
@@ -162,7 +168,7 @@ class TestRandomBehaviour(TestCase):
         description = getRandomString(5)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=description,
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=description,
                                body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
@@ -172,7 +178,7 @@ class TestRandomBehaviour(TestCase):
         body = getRandomString(10)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5),
                                body=body)
         test_article.save()
         response = self.client.get("/article/1")
@@ -181,7 +187,7 @@ class TestRandomBehaviour(TestCase):
     def test_normal_behaviour_context_is_post(self):
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5),
                                body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
@@ -191,7 +197,7 @@ class TestRandomBehaviour(TestCase):
         title = getRandomString(5)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=title, description=getRandomString(5),
+        test_article = Article(cover=file_mock, author=superuser, title=title, description=getRandomString(5),
                                body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
@@ -201,7 +207,7 @@ class TestRandomBehaviour(TestCase):
         body = getRandomString(10)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5),
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5),
                                body=body)
         test_article.save()
         response = self.client.get("/article/1")
@@ -213,7 +219,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.status_code, 200)
@@ -221,7 +227,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection_is_template_used(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertTemplateUsed(response, "detail.html")
@@ -229,7 +235,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection_context(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"], test_article)
@@ -237,7 +243,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection_context_author(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"].author, superuser)
@@ -245,7 +251,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection_context_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="<script>alert(1)</script>")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>")
         test_article.save()
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"].title, "test")
@@ -253,7 +259,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection_context_description(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription",
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
                                body="<script>alert(1)</script>")  # noqa: E501
         test_article.save()
         response = self.client.get("/article/1")
@@ -262,7 +268,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection_context_body(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription",
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
                                body="<script>alert(1)</script>")  # noqa: E501
         test_article.save()
         response = self.client.get("/article/1")
@@ -271,7 +277,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection_context_is_post(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription",
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
                                body="<script>alert(1)</script>")  # noqa: E501
         test_article.save()
         response = self.client.get("/article/1")
@@ -280,7 +286,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection_contains_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription",
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
                                body="<script>alert(1)</script>")  # noqa: E501
         test_article.save()
         response = self.client.get("/article/1")
@@ -289,7 +295,7 @@ class TestXssProtection(TestCase):
     def test_xss_protection_contains_body(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription",
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
                                body="<script>alert(1)</script>")  # noqa: E501
         test_article.save()
         response = self.client.get("/article/1")
@@ -299,13 +305,13 @@ class TestXssProtection(TestCase):
 # noinspection DuplicatedCode
 class TestArticleModel(TestCase):
     def test_string_function(self):
-        test_article = Article(title="stringtest")
+        test_article = Article(cover=file_mock, title="stringtest")
         self.assertEqual(str(test_article), test_article.title)
 
     def test_id_type(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         test_article = Article.objects.get(id=1)
         self.assertIsInstance(test_article.id, int)
@@ -313,35 +319,35 @@ class TestArticleModel(TestCase):
     def test_author_type(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         self.assertIsInstance(test_article.author, User)
 
     def test_title_type(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         self.assertIsInstance(test_article.title, str)
 
     def test_description_type(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         self.assertIsInstance(test_article.description, str)
 
     def test_body_type(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         self.assertIsInstance(test_article.body, str)
 
     def test_time_type(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         test_article = Article.objects.get(id=1)
         self.assertIsInstance(test_article.time, datetime)
@@ -349,7 +355,7 @@ class TestArticleModel(TestCase):
     def test_is_post_type(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         test_article = Article.objects.get(id=1)
         self.assertIsInstance(test_article.is_post, bool)
@@ -357,7 +363,7 @@ class TestArticleModel(TestCase):
     def test_is_post_default(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         test_article = Article.objects.get(id=1)
         self.assertEqual(test_article.is_post, True)
