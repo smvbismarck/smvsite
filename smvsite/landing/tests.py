@@ -1,11 +1,17 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 import string
 import secrets
 from blog.models import Article
+import os
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+lorem_img_location = str(BASE_DIR) + "/static/lorem.jpg"
 
 char_string = string.ascii_letters + string.digits
+file_mock = SimpleUploadedFile(name='lorem.jpg', content=open(lorem_img_location, 'rb').read(), content_type='image/jpeg')
 
 
 def getRandomString(size):
@@ -32,7 +38,7 @@ class TestSingle(TestCase):
     def test_single_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].title, "test")
@@ -40,7 +46,7 @@ class TestSingle(TestCase):
     def test_single_description(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].description, "testdescription")
@@ -48,7 +54,7 @@ class TestSingle(TestCase):
     def test_single_body(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].body, "lorem ipsum")
@@ -56,7 +62,7 @@ class TestSingle(TestCase):
     def test_single_title_author(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].author, superuser)
@@ -64,7 +70,7 @@ class TestSingle(TestCase):
     def test_single_contains_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/")
         self.assertIn(b"test", response.content)
@@ -72,7 +78,7 @@ class TestSingle(TestCase):
     def test_single_contains_description(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/")
         self.assertIn(b"testdescription", response.content)
@@ -80,7 +86,7 @@ class TestSingle(TestCase):
     def test_single_contains_url(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/")
         self.assertIn(str.encode(reverse("article", args=[1])), response.content)
@@ -92,7 +98,7 @@ class TestRandomSingle(TestCase):
         title = getRandomString(5)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=title, description=getRandomString(5), body=getRandomString(10))
+        test_article = Article(cover=file_mock, author=superuser, title=title, description=getRandomString(5), body=getRandomString(10))
         test_article.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].title, title)
@@ -101,7 +107,7 @@ class TestRandomSingle(TestCase):
         description = getRandomString(5)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=description, body=getRandomString(10))  # noqa: E501
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=description, body=getRandomString(10))  # noqa: E501
         test_article.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].description, description)
@@ -110,7 +116,7 @@ class TestRandomSingle(TestCase):
         body = getRandomString(10)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5), body=body)
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5), body=body)
         test_article.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].body, body)
@@ -118,7 +124,7 @@ class TestRandomSingle(TestCase):
     def test_random_single_title_author(self):
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5), body=getRandomString(10))  # noqa: E501
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5), body=getRandomString(10))  # noqa: E501
         test_article.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].author, superuser)
@@ -127,7 +133,7 @@ class TestRandomSingle(TestCase):
         title = getRandomString(5)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=title, description=getRandomString(5), body=getRandomString(10))
+        test_article = Article(cover=file_mock, author=superuser, title=title, description=getRandomString(5), body=getRandomString(10))
         test_article.save()
         response = self.client.get("/")
         self.assertIn(str.encode(title), response.content)
@@ -136,7 +142,7 @@ class TestRandomSingle(TestCase):
         description = getRandomString(5)
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=description, body=getRandomString(10))  # noqa: E501
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=description, body=getRandomString(10))  # noqa: E501
         test_article.save()
         response = self.client.get("/")
         self.assertIn(str.encode(description), response.content)
@@ -144,7 +150,7 @@ class TestRandomSingle(TestCase):
     def test_random_single_contains_url(self):
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title=getRandomString(5), description=getRandomString(5), body=getRandomString(10))  # noqa: E501
+        test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5), body=getRandomString(10))  # noqa: E501
         test_article.save()
         response = self.client.get("/")
         self.assertIn(str.encode(reverse("article", args=[1])), response.content)
@@ -155,9 +161,9 @@ class TestMulti(TestCase):
     def test_multi_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
-        test_article2 = Article(author=superuser, title="test2", description="test2", body="lorem ipsum2")
+        test_article2 = Article(cover=file_mock, author=superuser, title="test2", description="test2", body="lorem ipsum2")
         test_article2.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].title, "test")
@@ -166,9 +172,9 @@ class TestMulti(TestCase):
     def test_multi_description(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
-        test_article2 = Article(author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
+        test_article2 = Article(cover=file_mock, author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
         test_article2.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].description, "testdescription")
@@ -177,9 +183,9 @@ class TestMulti(TestCase):
     def test_multi_body(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
-        test_article2 = Article(author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
+        test_article2 = Article(cover=file_mock, author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
         test_article2.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].body, "lorem ipsum")
@@ -188,9 +194,9 @@ class TestMulti(TestCase):
     def test_multi_title_author(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="test", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
-        test_article2 = Article(author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
+        test_article2 = Article(cover=file_mock, author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
         test_article2.save()
         response = self.client.get("/")
         self.assertEquals(response.context["articles"][0].author, superuser)
@@ -199,9 +205,9 @@ class TestMulti(TestCase):
     def test_multi_contains_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
-        test_article2 = Article(author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
+        test_article2 = Article(cover=file_mock, author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
         test_article2.save()
         response = self.client.get("/")
         self.assertIn(b"test", response.content)
@@ -210,9 +216,9 @@ class TestMulti(TestCase):
     def test_multi_contains_description(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
-        test_article2 = Article(author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
+        test_article2 = Article(cover=file_mock, author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
         test_article2.save()
         response = self.client.get("/")
         self.assertIn(b"testdescription", response.content)
@@ -221,9 +227,9 @@ class TestMulti(TestCase):
     def test_multi_contains_url(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(author=superuser, title="test", description="testdescription", body="lorem ipsum")
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
-        test_article2 = Article(author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
+        test_article2 = Article(cover=file_mock, author=superuser, title="test2", description="testdescription2", body="lorem ipsum2")
         test_article2.save()
         response = self.client.get("/")
         self.assertIn(str.encode(reverse("article", args=[1])), response.content)
