@@ -4,14 +4,16 @@ from django.contrib.auth.models import User
 import secrets
 import string
 from blog import models as blog_models
-import os
 from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 lorem_img_location = str(BASE_DIR) + "/static/lorem.jpg"
 
 Article = blog_models.Article
 char_string = string.ascii_letters + string.digits
-file_mock = SimpleUploadedFile(name='lorem.jpg', content=open(lorem_img_location, 'rb').read(), content_type='image/jpeg')
+file_mock = SimpleUploadedFile(name='lorem.jpg', content=open(lorem_img_location, 'rb').read(),
+                               content_type='image/jpeg')
+
 
 def getRandomString(size):
     return ''.join(secrets.choice(char_string) for _ in range(size))
@@ -33,7 +35,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum",
+                               is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.status_code, 200)
@@ -41,7 +44,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour_is_template_used(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum",
+                               is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertTemplateUsed(response, "detail.html")
@@ -49,7 +53,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum",
+                               is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.context["article"], test_article)
@@ -57,7 +62,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_author(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum",
+                               is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.context["article"].author, superuser)
@@ -65,7 +71,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum",
+                               is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.context["article"].title, "test")
@@ -73,7 +80,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_description(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
+                               body="lorem ipsum", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.context["article"].description, "testdescription")
@@ -81,7 +89,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_body(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
+                               body="lorem ipsum", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.context["article"].body, "<p>lorem ipsum</p>\n")
@@ -89,7 +98,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour_context_is_post(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
+                               body="lorem ipsum", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.context["article"].is_post, False)
@@ -97,7 +107,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour_contains_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
+                               body="lorem ipsum", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertIn(b"test", response.content)
@@ -105,7 +116,8 @@ class TestNormal(TestCase):
     def test_normal_behaviour_contains_body(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
+                               body="lorem ipsum", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertIn(b"lorem ipsum", response.content)
@@ -222,7 +234,8 @@ class TestXssProtection(TestCase):
     def test_xss_protection(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test",
+                               body="<script>alert(1)</script>", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.status_code, 200)
@@ -230,7 +243,8 @@ class TestXssProtection(TestCase):
     def test_xss_protection_is_template_used(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test",
+                               body="<script>alert(1)</script>", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertTemplateUsed(response, "detail.html")
@@ -238,7 +252,8 @@ class TestXssProtection(TestCase):
     def test_xss_protection_context(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test",
+                               body="<script>alert(1)</script>", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.context["article"], test_article)
@@ -246,7 +261,8 @@ class TestXssProtection(TestCase):
     def test_xss_protection_context_author(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test",
+                               body="<script>alert(1)</script>", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.context["article"].author, superuser)
@@ -254,7 +270,8 @@ class TestXssProtection(TestCase):
     def test_xss_protection_context_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
-        test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="<script>alert(1)</script>", is_post=False)
+        test_article = Article(cover=file_mock, author=superuser, title="test", description="test",
+                               body="<script>alert(1)</script>", is_post=False)
         test_article.save()
         response = self.client.get("/komitee/test")
         self.assertEqual(response.context["article"].title, "test")

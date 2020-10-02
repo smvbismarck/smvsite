@@ -26,6 +26,6 @@ urlpatterns = [
     path("komitee/", include("komitee.urls"))
 ]
 
-if settings.DEBUG == True:
+if settings.DEBUG is True:
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

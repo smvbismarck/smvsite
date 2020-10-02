@@ -5,8 +5,8 @@ import secrets
 import string
 from .models import Article
 from datetime import datetime
-import os
 from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 lorem_img_location = str(BASE_DIR) + "/static/lorem.jpg"
 

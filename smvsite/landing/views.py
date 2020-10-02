@@ -2,7 +2,6 @@
 from blog import models as blog_models
 from django.shortcuts import render, HttpResponse
 from django.views.decorators.cache import cache_page
-from smvsite import settings
 
 
 @cache_page(60)

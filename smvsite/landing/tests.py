@@ -5,8 +5,8 @@ from django.urls import reverse
 import string
 import secrets
 from blog.models import Article
-import os
 from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 lorem_img_location = str(BASE_DIR) + "/static/lorem.jpg"
 
