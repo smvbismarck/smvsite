@@ -1,3 +1,27 @@
+FROM python:alpine AS builder
+
+ENV PYTHONUNBUFFERED 1
+
+RUN apk update --no-cache && apk upgrade --no-cache
+
+RUN apk add --no-cache postgresql-libs zlib-dev jpeg-dev
+
+RUN apk add --no-cache --virtual .build-deps postgresql-dev gcc musl-dev
+
+WORKDIR /code
+
+COPY requirements.txt /code
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN apk --purge del .build-deps
+
+COPY . /code
+
+WORKDIR /code/smvsite
+
+RUN python manage.py collectstatic --noinput
+
 FROM nginx:alpine
 
 RUN rm /usr/share/nginx/html/index.html
@@ -6,4 +30,4 @@ RUN mkdir /usr/share/nginx/html/media
 
 RUN mkdir /usr/share/nginx/html/static
 
-COPY smvsite/static /usr/share/nginx/html/static
+COPY --from=builder /code/smvsite/static /usr/share/nginx/html/static
