@@ -29,7 +29,7 @@ SECRET_KEY = get_config.get_env_config("SECRET_KEY", '*w(lfxzp-uqz8cn8#*o&+6hd1x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(get_config.get_env_config("DEBUG", False))
 
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "smvbismarck.herokuapp.com", "lucasservercluster.hopto.org", "10.5.0.3", "reverse_proxy", "traefik", "10.6.0.3"]  # noqa: E501
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "smvbismarck.herokuapp.com", "lucasservercluster.hopto.org", "10.5.0.3", "reverse_proxy", "traefik", "10.6.0.3", "192.168.0.31"]  # noqa: E501
 
 
 # Application definition
