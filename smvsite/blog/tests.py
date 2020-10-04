@@ -91,13 +91,13 @@ class TestNormal(TestCase):
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"].body, "<p>lorem ipsum</p>\n")
 
-    def test_normal_behaviour_context_is_post(self):
+    def test_normal_behaviour_context_blogpost(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
         test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription", body="lorem ipsum")
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertTrue(response.context["article"].is_post)
+        self.assertTrue(response.context["article"].blogpost)
 
     def test_normal_behaviour_contains_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
@@ -184,14 +184,14 @@ class TestRandomBehaviour(TestCase):
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"].body, "<p>" + body + "</p>\n")
 
-    def test_normal_behaviour_context_is_post(self):
+    def test_normal_behaviour_context_blogpost(self):
         superuser = User(username=getRandomString(5), password=getRandomString(5), is_superuser=True)
         superuser.save()
         test_article = Article(cover=file_mock, author=superuser, title=getRandomString(5), description=getRandomString(5),
                                body=getRandomString(10))
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertTrue(response.context["article"].is_post)
+        self.assertTrue(response.context["article"].blogpost)
 
     def test_normal_behaviour_contains_title(self):
         title = getRandomString(5)
@@ -274,14 +274,14 @@ class TestXssProtection(TestCase):
         response = self.client.get("/article/1")
         self.assertEqual(response.context["article"].body, "&lt;script&gt;alert(1)&lt;/script&gt;")
 
-    def test_xss_protection_context_is_post(self):
+    def test_xss_protection_context_blogpost(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
         test_article = Article(cover=file_mock, author=superuser, title="test", description="testdescription",
                                body="<script>alert(1)</script>")  # noqa: E501
         test_article.save()
         response = self.client.get("/article/1")
-        self.assertTrue(response.context["article"].is_post)
+        self.assertTrue(response.context["article"].blogpost)
 
     def test_xss_protection_contains_title(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
@@ -352,18 +352,18 @@ class TestArticleModel(TestCase):
         test_article = Article.objects.get(id=1)
         self.assertIsInstance(test_article.time, datetime)
 
-    def test_is_post_type(self):
+    def test_blogpost_type(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
         test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         test_article = Article.objects.get(id=1)
-        self.assertIsInstance(test_article.is_post, bool)
+        self.assertIsInstance(test_article.blogpost, bool)
 
-    def test_is_post_default(self):
+    def test_blogpost_default(self):
         superuser = User(username="admin", password="admin", is_superuser=True)
         superuser.save()
         test_article = Article(cover=file_mock, author=superuser, title="test", description="test", body="lorem ipsum")
         test_article.save()
         test_article = Article.objects.get(id=1)
-        self.assertEqual(test_article.is_post, True)
+        self.assertEqual(test_article.blogpost, True)

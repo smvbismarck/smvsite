@@ -18,7 +18,7 @@ RUN apk --purge del .build-deps
 
 COPY . /code
 
-RUN mkdir /code/smvsite/media
+RUN mkdir -p /code/smvsite/media
 
 WORKDIR /code/smvsite
 
