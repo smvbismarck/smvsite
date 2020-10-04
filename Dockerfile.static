@@ -26,8 +26,8 @@ FROM nginx:alpine
 
 RUN rm /usr/share/nginx/html/index.html
 
-RUN mkdir /usr/share/nginx/html/media
+RUN mkdir -p /usr/share/nginx/html/media
 
-RUN mkdir /usr/share/nginx/html/static
+RUN mkdir -p /usr/share/nginx/html/static
 
 COPY --from=builder /code/smvsite/static /usr/share/nginx/html/static

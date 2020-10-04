@@ -19,6 +19,5 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'smvsite.settings')
 application = get_wsgi_application()
 application = WhiteNoise(application)
 
-if not settings.DEBUG:
-    application.add_files(os.path.join(BASE_DIR, "static"), prefix='static/')
-    application.add_files(os.path.join(BASE_DIR, "media"), prefix="media/")
+application.add_files(os.path.join(BASE_DIR, "static"), prefix='static/')
+application.add_files(os.path.join(BASE_DIR, "media"), prefix="media/")

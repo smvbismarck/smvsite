@@ -1,5 +1,15 @@
 from django.contrib import admin
-from .models import Article
+from .models import Article, Image
 
-admin.site.register(Article)
+
+class ImageInline(admin.StackedInline):
+    model = Image
+    extra = 0
+
+
+class ArticleAdmin(admin.ModelAdmin):
+    inlines = [ImageInline]
+
+
+admin.site.register(Article, ArticleAdmin)
 # Register your models here.
