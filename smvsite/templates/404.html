@@ -1,0 +1,34 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Error Page</title>
+
+    <link rel="stylesheet" href={% static "bootstrap/bootstrap_4.5.2.css" %}>
+    <link rel="stylesheet" href={% static "index/css/style.css" %}>
+</head>
+<body>
+    <div class="screen">
+        <div class="top-block">
+          <p>You click the blue pill, you wake up on the homepage and believe what Google wants you to believe</p>
+          <!--"You take the blue pill, you wake up in your bed, and believe whatever you want to believe"-->
+        </div>
+        <div class="bottom-block">
+          <p>You click the red pill, you stay in wonderland and I show you how deep the rabbit hole goes</p>
+          <!--"You take the red pill, you stay in wonderland, and I show you how deep the rabbit hole goes-->
+        </div>
+
+        <a href="https://theuselessweb.com/">
+          <button class="red-pill"></button>
+        </a>
+        <a href={% url "index" %}>
+          <button class="blue-pill"></button>
+        </a>
+    </div>
+    <script src={% static "jquery-3.5.1.slim/query-3.5.1.slim.js" %}></script>
+    <script src={% static "popper.js/popper.js" %}></script>
+    <script src={% static "bootstrap/bootstrap_4.5.2.js" %}></script>
+</body>
+</html>
