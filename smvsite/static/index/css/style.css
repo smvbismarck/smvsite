@@ -531,3 +531,53 @@ footer .copyright {
     display: block;
     margin-top: 0; // remove the gap so it doesn't close
  }
+.screen {
+          width: 100vw;
+          height: 100vh;
+          background-color: black;
+          background-image: url(../../404ErrorPage/img/choose-pill.gif);
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-size: contain;
+          background-position: center;
+          overflow: hidden;
+        }
+
+        .red-pill,
+        .blue-pill {
+          position: absolute;
+          height: 100%;
+          top: 0%;
+          border: none;
+          background-color: transparent;
+        }
+
+        .red-pill {
+          left: 0%;
+          width: 48.5%;
+        }
+
+        .blue-pill {
+          right: 0%;
+          width: 51.5%;
+        }
+
+        .top-block,
+        .bottom-block {
+          position: absolute;
+          color: white;
+          font-size: 100%;
+          font-size: calc((5vh + 2vw) / 2);
+          text-align: center;
+          overflow: hidden;
+          left: 3%;
+          right: 3%;
+        }
+
+        .top-block {
+          top: 7%;
+        }
+
+        .bottom-block {
+          bottom: 7%;
+        }
