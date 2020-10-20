@@ -29,7 +29,7 @@ SECRET_KEY = get_config.get_env_config("SECRET_KEY", '*w(lfxzp-uqz8cn8#*o&+6hd1x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(get_config.get_env_config("DEBUG", False))
 
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "smvbismarck.herokuapp.com", "lucasservercluster.hopto.org", "10.5.0.3", "reverse_proxy", "traefik", "10.6.0.3"]  # noqa: E501
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "smvbismarck.herokuapp.com", "lucasservercluster.hopto.org", "10.5.0.3", "reverse_proxy", "traefik", "10.6.0.3", "192.168.0.31"]  # noqa: E501
 
 
 # Application definition
@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'landing',
-    'komitee'
+    'komitee',
+    'couchdb_storage'
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 SECURE_CONTENT_TYPE_NOSNIFF: False
 
@@ -133,5 +136,30 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
+
+if get_config.get_env_config("CACHE_URL", "") == "":
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": get_config.get_env_config("CACHE_URL", ""),
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient"
+            },
+            "KEY_PREFIX": "smvsite"
+        },
+    }
+
+CACHE_TTL = get_config.get_env_config("CACHE_TTL", 10)
+
 if '/app' in os.environ['HOME']:
     django_heroku.settings(locals())
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -7,8 +7,17 @@ class Article(models.Model):
     title = models.CharField(max_length=100, unique=True)
     time = models.DateTimeField(auto_now_add=True)
     description = models.CharField(max_length=200)
+    cover = models.ImageField()
     body = models.TextField()
-    is_post = models.BooleanField(default=True)
+    blogpost = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
+
+
+class Image(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    image = models.ImageField()
+
+    def __str__(self):
+        return self.image.url

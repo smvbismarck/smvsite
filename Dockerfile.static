@@ -1,4 +1,4 @@
-FROM python:alpine
+FROM python:alpine AS builder
 
 ENV PYTHONUNBUFFERED 1
 
@@ -18,10 +18,16 @@ RUN apk --purge del .build-deps
 
 COPY . /code
 
-RUN mkdir -p /code/smvsite/media
-
 WORKDIR /code/smvsite
 
 RUN python manage.py collectstatic --noinput
 
-CMD gunicorn -b 0.0.0.0:8000 smvsite.wsgi
+FROM nginx:alpine
+
+RUN rm /usr/share/nginx/html/index.html
+
+RUN mkdir -p /usr/share/nginx/html/media
+
+RUN mkdir -p /usr/share/nginx/html/static
+
+COPY --from=builder /code/smvsite/static /usr/share/nginx/html/static

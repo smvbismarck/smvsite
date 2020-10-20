@@ -14,11 +14,12 @@
         <div class="container">
             <div class="row">
             {% for i in articles %}
-                {% if i.is_post %}
+                {% if i.blogpost %}
                 <div class="col-md-6 col-sm-12 col-lg-4 col-xl-3 post">
                         <div class="container post">
                             <div class="post-details">
                                 <a href={% url "article" i.id %}><h3 class="h4">{{ i.title }}</h3></a>
+                                <img src={{ i.cover.url }} class="img">
                                 <p class="text-muted">{{ i.description }}</p>
                             </div>
                         </div>

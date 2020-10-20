@@ -14,5 +14,9 @@ jobs:
         run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
       - name: Build the latest Docker image
         run: docker build . --file Dockerfile --tag smvsite/smvsite:latest
+      - name: Build the latest Docker image for static files
+        run: docker build . --file Dockerfile.static --tag smvsite/static:latest
       - name: Push the latest Docker image
         run: docker push smvsite/smvsite:latest
+      - name: Push the latest Docker image for static files
+        run: docker push smvsite/static:latest

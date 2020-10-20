@@ -12,6 +12,10 @@ psycopg2 = "*"
 django-heroku = "*"
 flake8 = "*"
 python-coveralls = "*"
+mistune = "*"
+django-redis = "*"
+django-couchdb-storage = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.8"
